@@ -6,13 +6,13 @@ This project consists of a full-stack application that scrapes blog articles, en
 
 ```mermaid
 graph TD
-    User[User Browser] <--> Frontend[React Frontend (Vite)]
+    User[User Browser] <--> Frontend["React Frontend (Vite)"]
     Frontend <--> API[Laravel Backend API]
     API <--> DB[(SQLite Database)]
     
     subgraph "AI Background Worker"
         Worker[Node.js Worker] --> API
-        Worker --> External[External Content (Google/IBM)]
+        Worker --> External["External Content (Google/IBM)"]
         Worker --> Search[Search Engine]
     end
     
