@@ -7,11 +7,7 @@ const ArticleList = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('https://nongospel-potentially-ares.ngrok-free.dev/api/articles', {
-            headers: {
-                "ngrok-skip-browser-warning": "69420"
-            }
-        })
+        axios.get('https://beyond-chats-assignment-7fof.onrender.com/api/articles')
             .then(res => {
                 if (Array.isArray(res.data)) {
                     setArticles(res.data);
