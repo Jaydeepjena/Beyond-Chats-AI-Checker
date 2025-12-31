@@ -14,7 +14,7 @@ async function fetchPendingArticle() {
         const { data } = await axios.get(API_URL);
         // Find one that hasn't been updated yet
         // Default API returns all, let's pick the first is_updated=false
-        const pending = data.find(a => a.is_updated === 0 || a.is_updated === false); 
+        const pending = data.find(a => a.is_updated === 0 || a.is_updated === false);
         return pending;
     } catch (error) {
         console.error('Error fetching articles:', error.message);
@@ -45,7 +45,7 @@ async function scrapeUrl(url) {
 async function callLLM(originalContent, newContexts) {
     console.log('[Mock] Calling LLM API...');
     const combinedContext = newContexts.map(c => c.content).join('\n\n');
-    
+
     // Mock Rewrite Logic
     const newContent = `
     <h2>(AI Rewritten) ${originalContent.substring(0, 50)}...</h2>
@@ -57,7 +57,7 @@ async function callLLM(originalContent, newContexts) {
     <p>${originalContent.substring(0, 200)}...</p>
     <p><em>(Refined with latest data from web)</em></p>
     `;
-    
+
     return newContent;
 }
 
@@ -78,32 +78,32 @@ async function updateArticle(id, newTitle, newContent, citations) {
 
 async function main() {
     const article = await fetchPendingArticle();
-    
+
     if (!article) {
         console.log('No pending articles found to process.');
         return;
     }
-    
+
     console.log(`Processing Article ID ${article.id}: "${article.title}"`);
-    
+
     // 1. Search
     const urls = await searchGoogle(article.title);
-    
+
     // 2. Scrape
     const scrapedData = [];
     for (const url of urls) {
         const data = await scrapeUrl(url);
         if (data.content) scrapedData.push(data);
     }
-    
+
     // 3. LLM Rewrite
     const newContent = await callLLM(article.title + " " + (article.content || ''), scrapedData);
-    
+
     // 4. Update
     await updateArticle(
-        article.id, 
-        `(AI) ${article.title}`, 
-        newContent, 
+        article.id,
+        `(AI) ${article.title}`,
+        newContent,
         scrapedData.map(d => d.url)
     );
 }
